@@ -102,27 +102,33 @@ header {
 }
 
 h1.main-title {
-    /* 한글: Nanum Square Black, 영문/숫자: Bebas Neue */
-    font-family: 'Bebas Neue', 'Nanum Square Black', sans-serif;
-    font-size: 6rem;
-    font-weight: 900;
-    letter-spacing: -2px;
-    line-height: 0.95;
+    font-family: 'Yeon Sung', 'Jua', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
     margin-bottom: 1.8rem;
-    color: var(--text-primary);
-    /* 포인트: 특정 단어만 컬러 주려면 span으로 감싸도 됨 */
-    position: relative;
+    line-height: 1.1;
 }
 
-/* 타이틀 앞에 작은 컬러 강조 라인 */
-h1.main-title::before {
-    content: '';
-    display: block;
-    width: 3rem;
-    height: 5px;
-    background: var(--accent);
-    border-radius: 99px;
-    margin: 0 auto 1.2rem;
+/* "이번 주" — 작고 가볍게 */
+h1.main-title .t1 {
+    font-size: 2.4rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+}
+
+/* "트렌드🔥" — 크고 임팩트 있게 */
+h1.main-title .t2 {
+    font-size: 6.5rem;
+    color: var(--accent);
+    letter-spacing: -2px;
+    line-height: 1;
+    /* 살짝 기울기로 포스터 느낌 */
+    transform: rotate(-1.5deg);
+    display: inline-block;
+    /* 텍스트 외곽선 */
+    -webkit-text-stroke: 2px rgba(255, 107, 74, 0.2);
 }
 
 header p#summary-text {
