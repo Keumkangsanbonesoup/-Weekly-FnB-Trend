@@ -158,7 +158,7 @@ def get_naver_trend(keyword):
         return None
 
 
-def summarize_with_ai(videos_data, blogs_data, community_data, max_retries=3):
+def summarize_with_ai(videos_data, blogs_data, community_data, max_retries=2):
     import time
 
     MODEL_FALLBACKS = [
@@ -219,7 +219,7 @@ def summarize_with_ai(videos_data, blogs_data, community_data, max_retries=3):
                     data=json.dumps(data).encode('utf-8'),
                     headers={'Content-Type': 'application/json'}
                 )
-                with urllib.request.urlopen(req, timeout=60) as response:
+                with urllib.request.urlopen(req, timeout=30) as response:
                     res_body = response.read().decode('utf-8')
                     result = json.loads(res_body)
                     text = result['candidates'][0]['content']['parts'][0]['text'].strip()
@@ -240,15 +240,15 @@ def summarize_with_ai(videos_data, blogs_data, community_data, max_retries=3):
                 print(f"   ⚠️ {last_error}")
                 
                 if e.code == 429:
-                    print(f"   ⏳ 무료 할당량 초과(429). 65초 대기 후 재시도합니다...")
-                    time.sleep(65)
+                    print(f"   ⏳ 무료 할당량 초과(429). 20초 대기 후 재시도합니다...")
+                    time.sleep(20)
                     continue 
                 elif e.code == 404:
                     print(f"   ❌ 해당 모델 없음(404). 즉시 다음 모델로 우회합니다.")
                     break 
                 elif e.code in (500, 503):
-                    print(f"   ⏳ 서버 과부하({e.code}). 15초 대기 후 재시도합니다...")
-                    time.sleep(15)
+                    print(f"   ⏳ 서버 과부하({e.code}). 10초 대기 후 재시도합니다...")
+                    time.sleep(10)
                     continue
                 else:
                     break
@@ -256,7 +256,7 @@ def summarize_with_ai(videos_data, blogs_data, community_data, max_retries=3):
             except Exception as e:
                 last_error = str(e)
                 print(f"   ⚠️ 네트워크 오류: {e}")
-                time.sleep(10)
+                time.sleep(5)
 
     raise RuntimeError(f"모든 제미나이 모델 시도 실패. 마지막 에러: {last_error}")
 
