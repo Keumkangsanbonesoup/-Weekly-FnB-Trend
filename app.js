@@ -56,16 +56,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const weeks = data.weeks || [];
         if (weeks.length === 0) return;
 
-        // 최신 주차 = 배열의 마지막
         const currentWeek = weeks[weeks.length - 1];
-        const pastWeeks = weeks.slice(0, weeks.length - 1).reverse(); // 최신순 정렬
+        const pastWeeks = weeks.slice(0, weeks.length - 1).reverse();
 
-        // 금주 트렌드 렌더링
         if (updateDateEl) updateDateEl.textContent = currentWeek.week_label || currentWeek.updated_at;
         if (summaryEl) summaryEl.textContent = currentWeek.summary || '';
         if (grid) grid.innerHTML = buildCards(currentWeek.trends);
 
-        // 지난 주차 아코디언 렌더링
+        // 지난 주차 렌더링
         const archiveSection = document.getElementById('archive-section');
         const archiveContainer = document.getElementById('archive-container');
 
@@ -74,19 +72,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             if (archiveSection) archiveSection.style.display = 'block';
             if (archiveContainer) {
-                archiveContainer.innerHTML = pastWeeks.map((week) => `
-                    <div class="accordion-item">
-                        <button class="accordion-btn" aria-expanded="false" onclick="toggleAccordion(this)">
-                            <span class="accordion-label">📅 ${week.week_label}</span>
-                            <span class="accordion-summary">${week.summary.slice(0, 40)}…</span>
-                            <span class="accordion-arrow">▼</span>
-                        </button>
-                        <div class="accordion-content" hidden>
-                            <p class="archive-summary-text">${week.summary}</p>
-                            <div class="archive-grid">${buildCards(week.trends)}</div>
+                archiveContainer.innerHTML = pastWeeks.map((week, wi) => {
+                    const isFirst = wi === 0;
+                    const trendRows = week.trends.map((t, i) => {
+                        const linkUrl = t.source_link || t.source_video || '#';
+                        return `<a href="${linkUrl}" target="_blank" class="archive-trend-item">
+                            <span class="archive-trend-num">No.${i + 1}</span>
+                            <span class="archive-trend-title">${t.title}</span>
+                        </a>`;
+                    }).join('');
+
+                    return `
+                        <div class="archive-week">
+                            <button class="archive-week-btn ${isFirst ? 'open' : ''}" onclick="toggleArchiveWeek(this)">
+                                <span class="archive-week-label">${week.week_label}</span>
+                                <span class="archive-week-meta">${week.trends.length}개 트렌드</span>
+                                <span class="archive-week-arrow">${isFirst ? '▲' : '▼'}</span>
+                            </button>
+                            <div class="archive-week-content" ${isFirst ? '' : 'hidden'}>
+                                <div class="archive-trend-grid">${trendRows}</div>
+                            </div>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
         }
 
@@ -106,34 +114,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         const container = button.parentElement;
         const particleCount = Math.floor(Math.random() * 5) + 8;
         const emojis = ['🔥', '🔥', '🔥', '✨', '💥', '🧡'];
-
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
             particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
             particle.style.cssText = 'animation:none;position:absolute;left:calc(50% - 15px);top:10px;pointer-events:none;z-index:5;font-size:1.8rem;';
             container.appendChild(particle);
-
             const tx = (Math.random() - 0.5) * 300;
             const ty = (Math.random() * -140) - 80;
             const rot = (Math.random() - 0.5) * 180;
             const endScale = Math.random() * 1.4 + 0.8;
             const duration = Math.random() * 600 + 600;
-
             particle.animate([
                 { transform: 'translate(0, 0) scale(0.5) rotate(0deg)', opacity: 1 },
                 { transform: `translate(${tx}px, ${ty}px) scale(${endScale}) rotate(${rot}deg)`, opacity: 0 }
             ], { duration, easing: 'cubic-bezier(0, 0.9, 0.5, 1)', fill: 'forwards' });
-
             setTimeout(() => particle.remove(), duration);
         }
     };
 
     let updateDbCount = null;
-
     try {
         const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
         const { getFirestore, doc, onSnapshot, setDoc, updateDoc, increment, getDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-
         const firebaseConfig = {
             apiKey: "AIzaSyBOpIpRMPEj27XieFl2bzzLRtdlPlRLNZU",
             authDomain: "fnb-trend-db.firebaseapp.com",
@@ -143,24 +145,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             appId: "1:1092465751942:web:28836a7613f6ffb9a85e07",
             measurementId: "G-HK9022ZPN8"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const dbRef = doc(db, 'reactions', 'fire');
-
         const docSnap = await getDoc(dbRef);
         if (!docSnap.exists()) await setDoc(dbRef, { count: 0 });
-
         onSnapshot(dbRef, (snapshot) => {
             if (snapshot.exists()) {
                 localCount = snapshot.data().count || 0;
                 fireBtn.textContent = `도움되었다면 🔥를 눌러주세요 (${localCount})`;
             }
         }, (error) => console.error("Firestore 감지 에러:", error));
-
-        updateDbCount = async () => {
-            await updateDoc(dbRef, { count: increment(1) });
-        };
+        updateDbCount = async () => { await updateDoc(dbRef, { count: increment(1) }); };
     } catch (e) {
         console.error("데이터베이스 초기화 에러:", e);
         fireBtn.textContent = `도움되었다면 🔥를 눌러주세요 (0)`;
@@ -174,10 +170,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
-function toggleAccordion(btn) {
+function toggleArchiveWeek(btn) {
     const content = btn.nextElementSibling;
-    const isOpen = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', !isOpen);
+    const isOpen = btn.classList.contains('open');
     btn.classList.toggle('open', !isOpen);
+    btn.querySelector('.archive-week-arrow').textContent = isOpen ? '▼' : '▲';
     content.hidden = isOpen;
 }
