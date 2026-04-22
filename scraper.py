@@ -287,6 +287,29 @@ def enrich_with_naver_trends(trend_data):
     return trend_data
 
 
+def get_week_label():
+    """현재 날짜 기준으로 'n월 n주차' 라벨을 반환합니다."""
+    month = now_kst.month
+    first_day = now_kst.replace(day=1)
+    week_num = (now_kst.day + first_day.weekday()) // 7 + 1
+    return f"{month}월 {week_num}주차"
+
+
+def load_existing_data(filepath="data.js"):
+    """기존 data.js에서 누적 데이터를 읽어옵니다."""
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+        json_str = content.removeprefix("const trendData = ").removesuffix(";").strip()
+        parsed = json.loads(json_str)
+        # weeks 구조가 아니면 빈 구조로 시작
+        if "weeks" not in parsed:
+            return {"weeks": []}
+        return parsed
+    except Exception:
+        return {"weeks": []}
+
+
 if __name__ == "__main__":
     try:
         if not YOUTUBE_API_KEY:
@@ -294,8 +317,10 @@ if __name__ == "__main__":
         if not GEMINI_API_KEY:
             raise ValueError("GEMINI_API_KEY 시크릿이 설정되지 않았습니다!")
 
+        week_label = get_week_label()
+        print(f"📅 현재 주차: {week_label}")
+
         print("1. 유튜브 최신 트렌드 수집 중...")
-        # 💡 유튜브 검색어 핀셋 조정: '먹방', '핫플' 같은 포괄적 단어 버리고 철저히 '신상/신메뉴' 리뷰 위주로!
         recent_videos = get_latest_youtube_trends(
             "편의점 신상 리뷰|CU 신상|GS25 신상|디저트 신메뉴",
             max_results=7
@@ -303,7 +328,6 @@ if __name__ == "__main__":
         print(f"   → 영상 {len(recent_videos)}개 수집 완료.")
 
         print("2. 네이버 블로그 수집 중...")
-        # 💡 블로그 검색어 핀셋 조정: 따끈한 후기만 낚기 위해 '내돈내산' 키워드와 조합
         recent_blogs = get_naver_blog_trends("편의점 신상 내돈내산", max_results=7)
 
         print("3. 커뮤니티 수집 중...")
@@ -312,21 +336,34 @@ if __name__ == "__main__":
 
         print("4. Gemini AI 핀포인트 분석 중...")
         ai_json_str = summarize_with_ai(recent_videos, recent_blogs, recent_community)
-        
-        trend_data = json.loads(ai_json_str)
-        
-        # 🔥 AI가 엉뚱한 날짜를 뱉어도 무시하고, 파이썬이 정확한 한국 날짜로 강제 덮어쓰기!
-        trend_data["updated_at"] = today_str
-        
-        print(f"   → 트렌드 {len(trend_data.get('trends', []))}개 추출 완료.")
+        new_week_data = json.loads(ai_json_str)
+        new_week_data["updated_at"] = today_str
+        new_week_data["week_label"] = week_label
+        print(f"   → 트렌드 {len(new_week_data.get('trends', []))}개 추출 완료.")
 
         print("5. 교차검증 + 네이버 데이터랩 보강 중...")
-        trend_data = enrich_with_naver_trends(trend_data)
+        new_week_data = enrich_with_naver_trends(new_week_data)
+
+        print("6. 기존 데이터에 이번 주차 추가 중...")
+        existing = load_existing_data("data.js")
+        weeks = existing.get("weeks", [])
+
+        # 같은 주차면 덮어쓰고, 새 주차면 append
+        replaced = False
+        for i, w in enumerate(weeks):
+            if w.get("week_label") == week_label:
+                weeks[i] = new_week_data
+                replaced = True
+                break
+        if not replaced:
+            weeks.append(new_week_data)
+
+        final_data = {"weeks": weeks}
 
         with open("data.js", "w", encoding="utf-8") as f:
-            f.write(f"const trendData = {json.dumps(trend_data, ensure_ascii=False)};\n")
+            f.write(f"const trendData = {json.dumps(final_data, ensure_ascii=False)};\n")
 
-        print("✅ 완료! data.js 업데이트 성공.")
+        print(f"✅ 완료! data.js 업데이트 성공. (총 {len(weeks)}주차 누적)")
 
     except Exception as e:
         error_msg = traceback.format_exc()
