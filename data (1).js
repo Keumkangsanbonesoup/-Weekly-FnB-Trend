@@ -1,0 +1,66 @@
+const trendData = {
+  "weeks": [
+    {
+      "week_label": "4월 3주차",
+      "updated_at": "2026-04-22",
+      "summary": "2030 소비자들은 편의점과 프랜차이즈에서 쏟아지는 신상 메뉴에 열광하며, 특히 '황치즈'와 '버터떡' 디저트류, 그리고 독특한 조합의 간편식에 높은 관심을 보이고 있습니다.",
+      "trends": [
+        {
+          "title": "촉촉한 황치즈",
+          "description": "편의점 신상 디저트로 출시 직후부터 '품절대란'을 일으키며 재고 찾기 경쟁까지 벌어질 정도로 높은 인기를 구가하고 있습니다. 쫀득하고 촉촉한 황치즈의 진한 맛이 2030 소비자들의 입맛을 사로잡았습니다.",
+          "sentiment": "hot",
+          "keywords": ["편의점신상", "신상디저트", "황치즈", "품절대란", "GS", "CU"],
+          "mentioned_in": ["naver_blog"],
+          "source_link": "https://blog.naver.com/lovelove_1017/224260832315",
+          "source_name": "Naver Blog",
+          "cross_verified": false,
+          "naver_trend": {"ratios": [98.18449, 100, 98.28263, 93.57212, 13.54268], "is_rising": false}
+        },
+        {
+          "title": "롯데리아 삐딱한천재",
+          "description": "롯데리아의 4월 신메뉴로, 유튜브 '신상 리뷰' 영상에서 주요하게 다뤄지며 햄버거 덕후들의 기대를 한몸에 받고 있습니다. 독특한 이름만큼이나 새로운 맛으로 출시 초반부터 높은 관심을 받고 있습니다.",
+          "sentiment": "hot",
+          "keywords": ["롯데리아", "신상", "햄버거", "삐딱한천재", "패스트푸드"],
+          "mentioned_in": ["youtube"],
+          "source_link": "https://youtube.com/watch?v=m5BmJHwTlp0",
+          "source_name": "YouTube",
+          "cross_verified": false,
+          "naver_trend": {"ratios": [84.97914, 100, 86.96577, 93.42073, 11.30742], "is_rising": false}
+        },
+        {
+          "title": "컴포즈 쫀득 버터떡",
+          "description": "프랜차이즈 카페 컴포즈에서 출시된 '버터떡' 라인업 중 하나로, 편의점을 넘어 카페에서도 떡 디저트 트렌드를 이어가는 대표 주자입니다. 쫀득한 식감과 고소한 버터 풍미로 젊은층의 입맛을 사로잡으며 화제입니다.",
+          "sentiment": "hot",
+          "keywords": ["컴포즈", "버터떡", "프차신상", "떡디저트", "카페신상"],
+          "mentioned_in": ["youtube"],
+          "source_link": "https://youtube.com/watch?v=VWGsYJhNEZc",
+          "source_name": "YouTube",
+          "cross_verified": false,
+          "naver_trend": {"ratios": [68.88908, 90.68079, 73.21224, 100, 14.94414], "is_rising": false}
+        },
+        {
+          "title": "GS25 통모짜 치즈스틱",
+          "description": "최근 인기를 끌고 있는 '칠리스 치즈스틱'의 열풍을 이어받아 GS25에서 출시한 신상 편의점 메뉴입니다. 통모짜 치즈의 늘어나는 비주얼과 짭짤한 맛으로 '먹방' 콘텐츠에서도 주목받으며 소비 욕구를 자극하고 있습니다.",
+          "sentiment": "hot",
+          "keywords": ["GS25", "편의점신상", "통모짜", "치즈스틱", "칠리스"],
+          "mentioned_in": ["youtube"],
+          "source_link": "https://youtube.com/watch?v=7WWZ00lobxs",
+          "source_name": "YouTube",
+          "cross_verified": false,
+          "naver_trend": {"ratios": [99.61625, 100, 92.61503, 94.60843, 13.75238], "is_rising": false}
+        },
+        {
+          "title": "하림 치킨왕라면",
+          "description": "하림에서 야심차게 출시한 편의점 신상 컵라면으로, 감칠맛 나는 닭육수 베이스의 진한 풍미가 특징입니다. 라면 덕후들 사이에서 '내돈내산' 리뷰가 이어지며 뜨거운 관심을 받고 있는 기대작입니다.",
+          "sentiment": "hot",
+          "keywords": ["하림", "편의점신상", "컵라면", "치킨왕라면", "닭육수"],
+          "mentioned_in": ["naver_blog"],
+          "source_link": "https://blog.naver.com/kyopjk/224260845822",
+          "source_name": "Naver Blog",
+          "cross_verified": false,
+          "naver_trend": {"ratios": [97.00935, 100, 78.50271, 87.1867, 14.49512], "is_rising": false}
+        }
+      ]
+    }
+  ]
+};
