@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'ChangwonDangam';
+    src: url('ChangwonDangamAsac-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
 /* ── Design Direction: Clean Editorial × Soft 3D ──
    레퍼런스: 29CM, SSG 스타일
    - 넓은 여백, 깔끔한 타이포
@@ -102,33 +109,33 @@ header {
 }
 
 h1.main-title {
-    font-family: 'Yeon Sung', 'Jua', sans-serif;
+    font-family: 'ChangwonDangam', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.1rem;
+    gap: 0.4rem;
     margin-bottom: 1.8rem;
     line-height: 1.1;
 }
 
-/* "이번 주" — 작고 가볍게 */
+/* "금주의" — 작고 차분하게 */
 h1.main-title .t1 {
-    font-size: 2.4rem;
+    font-size: 2rem;
     color: var(--text-secondary);
-    letter-spacing: 2px;
+    letter-spacing: 4px;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
 }
 
-/* "트렌드🔥" — 크고 임팩트 있게 */
+/* "트렌드" — 크고 꽉 차게, 외곽선으로 입체감 */
 h1.main-title .t2 {
-    font-size: 6.5rem;
+    font-size: 7rem;
     color: var(--accent);
-    letter-spacing: -2px;
+    letter-spacing: -1px;
     line-height: 1;
-    /* 살짝 기울기로 포스터 느낌 */
-    transform: rotate(-1.5deg);
     display: inline-block;
-    /* 텍스트 외곽선 */
-    -webkit-text-stroke: 2px rgba(255, 107, 74, 0.2);
+    -webkit-text-stroke: 3px #FF6B4A;
+    paint-order: stroke fill;
 }
 
 header p#summary-text {
