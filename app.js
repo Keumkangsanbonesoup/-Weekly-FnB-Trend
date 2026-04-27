@@ -106,6 +106,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (summaryEl) summaryEl.textContent = '트렌드 데이터를 불러오는 데 실패했습니다.';
     }
 
+    // 드래그 스크롤
+    if (grid) {
+        let isDown = false, startX, scrollLeft;
+        grid.addEventListener('mousedown', (e) => {
+            isDown = true;
+            grid.classList.add('dragging');
+            startX = e.pageX - grid.offsetLeft;
+            scrollLeft = grid.scrollLeft;
+        });
+        grid.addEventListener('mouseleave', () => { isDown = false; grid.classList.remove('dragging'); });
+        grid.addEventListener('mouseup', () => { isDown = false; grid.classList.remove('dragging'); });
+        grid.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - grid.offsetLeft;
+            grid.scrollLeft = scrollLeft - (x - startX) * 1.5;
+        });
+        // 터치 지원
+        let touchStartX, touchScrollLeft;
+        grid.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].pageX;
+            touchScrollLeft = grid.scrollLeft;
+        });
+        grid.addEventListener('touchmove', (e) => {
+            const x = e.touches[0].pageX;
+            grid.scrollLeft = touchScrollLeft - (x - touchStartX);
+        });
+    }
+
     // 🔥 불꽃 파티클 버튼 + Firebase 누적 카운트
     const fireBtn = document.getElementById('fire-btn');
     if (!fireBtn) return;
