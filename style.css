@@ -173,6 +173,19 @@ header p#summary-text {
     min-width: 300px;
 }
 
+.trends-grid.dragging { cursor: grabbing; user-select: none; }
+.trends-grid { cursor: grab; }
+
+.scroll-hint {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+    letter-spacing: 0.3px;
+    animation: fadeUp 0.6s ease both;
+    animation-delay: 0.4s;
+}
+
 /* ── 카드 ── */
 .trend-card {
     background: var(--surface);
