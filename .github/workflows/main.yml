@@ -1,9 +1,9 @@
-name: Weekly F&B Trend Scraper
+name: Daily F&B Trend Scraper
 
 on:
   schedule:
-    # 매주 월요일 00:00 UTC = 한국시간 월요일 오전 9시에 실행
-    - cron: '0 0 * * 1'
+    # 매일 UTC 20:17 = KST 다음날 05:17 실행
+    - cron: '17 20 * * *'
   workflow_dispatch:
 
 permissions:
@@ -38,5 +38,5 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git add data.js
-        git commit -m "🍽️ 이번 주 F&B 트렌드 업데이트 완료" || exit 0
+        git commit -m "🍽️ 오늘의 F&B 트렌드 업데이트 완료" || exit 0
         git push
