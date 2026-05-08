@@ -17,7 +17,7 @@ GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "").strip()
 
 # 시간 설정 (한국 시간 KST 기준 확정)
 KST = timezone(timedelta(hours=9))
-now_kst = datetime.now(KST)
+now_kst = datetime(2025, 5, 1, tzinfo=KST)  # 5월 1주차로 강제
 
 time_limit = datetime.now(timezone.utc) - timedelta(days=7)
 five_days_ago = time_limit.strftime('%Y-%m-%dT%H:%M:%SZ')
