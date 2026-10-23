@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         triggerParticle(this);
         localCount++;
         this.textContent = `도움되었다면 🔥를 눌러주세요 (${localCount})`;
-        if (updateDbCount) updateDbCount().catch(err => console.error("카운트 업데이트 실패:", err));
     });
 });
 
