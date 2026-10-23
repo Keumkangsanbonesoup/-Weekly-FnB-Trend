@@ -135,36 +135,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    let updateDbCount = null;
-    try {
-        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
-        const { getFirestore, doc, onSnapshot, setDoc, updateDoc, increment, getDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-        const firebaseConfig = {
-            apiKey: "AIzaSyBOpIpRMPEj27XieFl2bzzLRtdlPlRLNZU",
-            authDomain: "fnb-trend-db.firebaseapp.com",
-            projectId: "fnb-trend-db",
-            storageBucket: "fnb-trend-db.firebasestorage.app",
-            messagingSenderId: "1092465751942",
-            appId: "1:1092465751942:web:28836a7613f6ffb9a85e07",
-            measurementId: "G-HK9022ZPN8"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const dbRef = doc(db, 'reactions', 'fire');
-        const docSnap = await getDoc(dbRef);
-        if (!docSnap.exists()) await setDoc(dbRef, { count: 0 });
-        onSnapshot(dbRef, (snapshot) => {
-            if (snapshot.exists()) {
-                localCount = snapshot.data().count || 0;
-                fireBtn.textContent = `도움되었다면 🔥를 눌러주세요 (${localCount})`;
-            }
-        }, (error) => console.error("Firestore 감지 에러:", error));
-        updateDbCount = async () => { await updateDoc(dbRef, { count: increment(1) }); };
-    } catch (e) {
-        console.error("데이터베이스 초기화 에러:", e);
-        fireBtn.textContent = `도움되었다면 🔥를 눌러주세요 (0)`;
-    }
-
     fireBtn.addEventListener('click', function() {
         triggerParticle(this);
         localCount++;
